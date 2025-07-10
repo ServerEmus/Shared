@@ -21,7 +21,7 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Build
-      run: dotnet pack Shared/Shared.csproj -o Out
+      run: dotnet build Shared/Shared.csproj -o Out
 
     - name : Upload Shared
       uses: actions/upload-artifact@v4.3.5
