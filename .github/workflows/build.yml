@@ -29,7 +29,7 @@ jobs:
     - name: Build
       run: dotnet build ${{ env.ProjName }}/${{ env.ProjName }}.csproj -o Out
 
-    - name : Upload ${{ env.ProjName }}
+    - name : Upload
       uses: actions/upload-artifact@v4.3.5
       with:
         name: ${{ env.ProjName }}
