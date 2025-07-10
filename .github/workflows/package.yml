@@ -10,7 +10,7 @@ env:
 
 jobs:
   publish-package:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +39,6 @@ jobs:
           
       - name: Publish to GitHub Packages
         run: |
-          dotnet nuget push Out\*.nupkg \
+          dotnet nuget push Out/*.nupkg \
           --source "github" \
           --api-key ${{ secrets.GITHUB_TOKEN  }}
