@@ -8,6 +8,9 @@ on:
   workflow_dispatch:
 # allow manual trigger
 
+env:
+  ProjName: Shared
+
 jobs:
   build:
     runs-on: windows-latest
@@ -20,11 +23,14 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    - name: Build
-      run: dotnet build Shared/Shared.csproj -o Out
+      - name: Add GitHub NuGet Source
+        run: dotnet nuget add source https://nuget.pkg.github.com/UplayEmus/index.json --name "github" --username "any" --password ${{ secrets.GITHUB_TOKEN  }} --store-password-in-clear-text
 
-    - name : Upload Shared
+    - name: Build
+      run: dotnet build ${{ env.ProjName }}/${{ env.ProjName }}.csproj -o Out
+
+    - name : Upload ${{ env.ProjName }}
       uses: actions/upload-artifact@v4.3.5
       with:
-        name: Shared
+        name: ${{ env.ProjName }}
         path: Out/*
