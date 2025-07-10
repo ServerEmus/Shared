@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - release
+    tags:
+      - "release-*"
 env:
   ProjName: Shared
 
