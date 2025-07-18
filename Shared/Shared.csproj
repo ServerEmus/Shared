@@ -16,6 +16,9 @@
 		<IsAotCompatible>True</IsAotCompatible>
 		<IsTrimmable>True</IsTrimmable>
 		<AssemblyName>UplayEmus.Shared</AssemblyName>
+		<Version>1.0.0</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
