@@ -4,18 +4,18 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Authors>UplayEmus;Detanup01</Authors>
-		<Company>UplayEmus</Company>
+		<Authors>ServerEmus;Detanup01</Authors>
+		<Company>ServerEmus</Company>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<RepositoryUrl>https://github.com/UplayEmus/Shared</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ServerEmus/Shared</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/UplayEmus/Shared</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/ServerEmus/Shared</PackageProjectUrl>
 		<Copyright>$(Company)</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<IsAotCompatible>True</IsAotCompatible>
 		<IsTrimmable>True</IsTrimmable>
-		<AssemblyName>UplayEmus.Shared</AssemblyName>
+		<AssemblyName>ServerEmus.Shared</AssemblyName>
 		<Version>1.0.0</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
@@ -27,7 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Google.Protobuf" Version="3.31.1" />
 		<PackageReference Include="Serilog" Version="4.3.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
