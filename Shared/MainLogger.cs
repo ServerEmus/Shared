@@ -29,8 +29,6 @@ public static class MainLogger
     /// </summary>
     public static void CreateNew()
     {
-        if (Log.Logger == Logger.None)
-            return;
         var Ilogger = new LoggerConfiguration()
             .MinimumLevel.ControlledBy(LevelSwitch)
             .WriteTo.File("logs.txt", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}", levelSwitch: FileLevelSwitch)
