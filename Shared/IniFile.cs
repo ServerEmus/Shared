@@ -8,23 +8,12 @@ namespace Shared;
 /// </summary>
 public static class IniFile
 {
+    private static readonly System.Text.Encoding Encoding = System.Text.Encoding.UTF8;
+
     /// <summary>
-    /// Reading the <paramref name="section"/> and the <paramref name="key"/> from <paramref name="filename"/>
+    /// IMI Parser for files.
     /// </summary>
-    /// <param name="filename">FileName to Read</param>
-    /// <param name="section">INI Section</param>
-    /// <param name="key">INI Key</param>
-    /// <returns>Readed value or <see cref="string.Empty"/></returns>
-    public static string Read(string filename, string section, string key)
-    {
-        FileIniDataParser parser = new();
-        IniData data = parser.ReadFile(filename, System.Text.Encoding.UTF8);
-        if (!data.Sections.ContainsSection(section))
-            return string.Empty;
-        if (!data[section].ContainsKey(key))
-            return string.Empty;
-        return data[section][key];
-    }
+    public static FileIniDataParser DataParser { get; private set; } = new();
 
     /// <summary>
     /// Reading the <see cref="KeyData"/> in <paramref name="section"/> with the <paramref name="key"/> from <paramref name="filename"/>
@@ -35,8 +24,7 @@ public static class IniFile
     /// <returns>Readed <see cref="KeyData"/> or <see langword="null"/></returns>
     public static KeyData? GetKeyData(string filename, string section, string key)
     {
-        FileIniDataParser parser = new();
-        IniData data = parser.ReadFile(filename, System.Text.Encoding.UTF8);
+        IniData data = DataParser.ReadFile(filename, Encoding);
         if (!data.Sections.ContainsSection(section))
             return null;
         if (!data[section].ContainsKey(key))
@@ -45,7 +33,22 @@ public static class IniFile
     }
 
     /// <summary>
-    /// Reading a <typeparamref name="T"/> type in a <paramref name="section"/> and the <paramref name="key"/> from <paramref name="filename"/>
+    /// Reading a value in <paramref name="section"/> with the <paramref name="key"/> from <paramref name="filename"/>
+    /// </summary>
+    /// <param name="filename">FileName to Read</param>
+    /// <param name="section">INI Section</param>
+    /// <param name="key">INI Key</param>
+    /// <returns>Readed value or <see cref="string.Empty"/></returns>
+    public static string Read(string filename, string section, string key)
+    {
+        KeyData? data = GetKeyData(filename, section, key);
+        if (data == null)
+            return string.Empty;
+        return data.Value;
+    }
+
+    /// <summary>
+    /// Reading a value <typeparamref name="T"/> type in <paramref name="section"/> with the <paramref name="key"/> from <paramref name="filename"/>
     /// </summary>
     /// <typeparam name="T">A Type that has <see cref="IParsable{TSelf}"/></typeparam>
     /// <param name="filename">FileName to Read</param>
@@ -62,6 +65,44 @@ public static class IniFile
     }
 
     /// <summary>
+    /// Reading comments in <paramref name="section"/> with the <paramref name="key"/> from <paramref name="filename"/>
+    /// </summary>
+    /// <param name="filename">FileName to Read</param>
+    /// <param name="section">INI Section</param>
+    /// <param name="key">INI Key</param>
+    /// <returns>Readed comments or Empty list</returns>
+    public static List<string> ReadComments(string filename, string section, string key)
+    {
+        KeyData? data = GetKeyData(filename, section, key);
+        if (data == null)
+            return [];
+        return data.Comments;
+    }
+
+    /// <summary>
+    /// Checks if the <paramref name="section"/> with and <paramref name="key"/> exists inside the <paramref name="filename"/>
+    /// </summary>
+    /// <param name="filename">FileName to read from</param>
+    /// <param name="section">INI Section</param>
+    /// <param name="key">INI Key</param>
+    /// <returns><see langword="true"/> if the contains a value otherwise, <see langword="false"/>.</returns>
+    public static bool Exists(string filename, string section, string key)
+    {
+        string readed = Read(filename, section, key);
+        return !string.IsNullOrEmpty(readed);
+    }
+
+    private static void WriteTemp(string filename)
+    {
+        if (File.Exists(filename))
+            return;
+        string? path = Path.GetDirectoryName(filename);
+        if (!string.IsNullOrEmpty(path))
+            Directory.CreateDirectory(path);
+        File.WriteAllText(filename, $"{DataParser.Parser.Configuration.CommentString}Temp");
+    }
+
+    /// <summary>
     /// Write a <paramref name="value"/> to the <paramref name="filename"/> with a Key of <paramref name="key"/> and a Section as <paramref name="section"/>
     /// </summary>
     /// <param name="filename">FileName to write to</param>
@@ -72,19 +113,10 @@ public static class IniFile
     {
         if (value == null)
             return;
-        if (!File.Exists(filename))
-        {
-            string? path = Path.GetDirectoryName(filename);
-            if (!string.IsNullOrEmpty(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            File.WriteAllText(filename, ";TMP");
-        }
-        FileIniDataParser parser = new();
-        IniData data = parser.ReadFile(filename, System.Text.Encoding.UTF8);
+        WriteTemp(filename);
+        IniData data = DataParser.ReadFile(filename, Encoding);
         data[section][key] = value;
-        parser.WriteFile(filename, data, System.Text.Encoding.UTF8);
+        DataParser.WriteFile(filename, data, Encoding);
     }
 
     /// <summary>
@@ -97,33 +129,10 @@ public static class IniFile
     {
         if (keyData == null)
             return;
-        if (!File.Exists(filename))
-        {
-            string? path = Path.GetDirectoryName(filename);
-            if (!string.IsNullOrEmpty(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            File.WriteAllText(filename, ";TMP");
-        }
-        FileIniDataParser parser = new();
-        IniData data = parser.ReadFile(filename, System.Text.Encoding.UTF8);
+        WriteTemp(filename);
+        IniData data = DataParser.ReadFile(filename, Encoding);
         data[section].SetKeyData(keyData);
-        parser.WriteFile(filename, data, System.Text.Encoding.UTF8);
-    }
-
-
-    /// <summary>
-    /// Checks if the <paramref name="section"/> and <paramref name="key"/> exists inside the <paramref name="filename"/>
-    /// </summary>
-    /// <param name="filename">FileName to read from</param>
-    /// <param name="section">INI Section</param>
-    /// <param name="key">INI Key</param>
-    /// <returns><see langword="true"/> if Exists <see langword="false"/> if not</returns>
-    public static bool Exists(string filename, string section, string key)
-    {
-        string readed = Read(filename, section, key);
-        return !string.IsNullOrEmpty(readed);
+        DataParser.WriteFile(filename, data, Encoding);
     }
 
     /// <summary>

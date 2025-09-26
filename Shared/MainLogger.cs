@@ -10,6 +10,16 @@ namespace Shared;
 public static class MainLogger
 {
     /// <summary>
+    /// Name of the file for the File Logging.
+    /// </summary>
+    public static string FileName { get; set; } = "logs.txt";
+
+    /// <summary>
+    /// Template of both logging type.
+    /// </summary>
+    public static string OutputTemplate { get; set; } = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
+
+    /// <summary>
     /// Switch for all logging level.
     /// </summary>
     public static LoggingLevelSwitch LevelSwitch { get; } = new(LogEventLevel.Information);
@@ -31,10 +41,10 @@ public static class MainLogger
     {
         var Ilogger = new LoggerConfiguration()
             .MinimumLevel.ControlledBy(LevelSwitch)
-            .WriteTo.File("logs.txt", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}", levelSwitch: FileLevelSwitch)
-            .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}", levelSwitch: ConsoleLevelSwitch)
+            .WriteTo.File(FileName, outputTemplate: OutputTemplate, levelSwitch: FileLevelSwitch)
+            .WriteTo.Console(outputTemplate: OutputTemplate, levelSwitch: ConsoleLevelSwitch)
             .CreateLogger();
-        Ilogger.Information("Application started!");
+        Ilogger.Information("Started!");
         Log.Logger = Ilogger;
     }
 
@@ -43,7 +53,7 @@ public static class MainLogger
     /// </summary>
     public static void Close()
     {
-        Log.Information("Application closed!");
+        Log.Information("Closed!");
         Log.CloseAndFlush();
         Log.Logger = Logger.None;
     }
