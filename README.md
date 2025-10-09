@@ -1,2 +1,5 @@
 # Shared
-Shared stuff for all project.
+Main package accross ServerEmus.\
+This currently contains:
+- Log handle
+- INI File work
