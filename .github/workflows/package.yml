@@ -1,42 +1,14 @@
 name: Publish Package
+
 on:
   push:
     tags:
       - "release-*"
-env:
-  ProjName: Shared
 
 jobs:
   publish-package:
-    runs-on: windows-latest
-    permissions:
-      contents: write
-      packages: write
-
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-
-      - name: Add GitHub NuGet Source
-        run: dotnet nuget add source https://nuget.pkg.github.com/ServerEmus/index.json --name "github" --username "any" --password ${{ secrets.GITHUB_TOKEN  }} --store-password-in-clear-text
-
-      - name: Build
-        run: dotnet build ${{ env.ProjName }}/${{ env.ProjName }}.csproj -o Out
-
-      - name: Publish to GitHub Packages
-        run: dotnet nuget push Out/ServerEmus.${{ env.ProjName }}**.nupkg --source "github" --api-key ${{ secrets.GITHUB_TOKEN  }}
-
-      - name : Upload
-        uses: actions/upload-artifact@v4.3.5
-        with:
-          name: ${{ env.ProjName }}
-          path: Out/ServerEmus.${{ env.ProjName }}**.nupkg
-
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: Out/ServerEmus.${{ env.ProjName }}**.nupkg
+    uses: ServerEmus/workflows/.github/workflows/package.yml@main
+    with:
+      ProjName: Shared
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN   }}
