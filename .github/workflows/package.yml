@@ -7,6 +7,9 @@ on:
 
 jobs:
   publish-package:
+    permissions:
+      contents: write
+      packages: write
     uses: ServerEmus/workflows/.github/workflows/package.yml@main
     with:
       ProjName: Shared
