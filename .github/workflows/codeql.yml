@@ -24,9 +24,7 @@ jobs:
       matrix:
         include:
         - language: actions
-          build-mode: none
         - language: csharp
-          build-mode: autobuild
           
     steps:
     - name: Checkout repository
@@ -50,7 +48,7 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
+        build-mode: none
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
