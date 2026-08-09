@@ -44,7 +44,6 @@ public static class MainLogger
             .WriteTo.File(FileName, outputTemplate: OutputTemplate, levelSwitch: FileLevelSwitch)
             .WriteTo.Console(outputTemplate: OutputTemplate, levelSwitch: ConsoleLevelSwitch)
             .CreateLogger();
-        Ilogger.Information("Started!");
         Log.Logger = Ilogger;
     }
 
@@ -53,7 +52,6 @@ public static class MainLogger
     /// </summary>
     public static void Close()
     {
-        Log.Information("Closed!");
         Log.CloseAndFlush();
         Log.Logger = Logger.None;
     }
