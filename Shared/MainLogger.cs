@@ -1,8 +1,9 @@
 ﻿using Serilog;
-using Serilog.Events;
 using Serilog.Core;
+using Serilog.Events;
+using System.Globalization;
 
-namespace Shared;
+namespace ServerEmus.Shared;
 
 /// <summary>
 /// Logger to make logging easy.
@@ -10,27 +11,27 @@ namespace Shared;
 public static class MainLogger
 {
     /// <summary>
-    /// Name of the file for the File Logging.
+    /// Gets or sets the name of the file for the File Logging.
     /// </summary>
     public static string FileName { get; set; } = "logs.txt";
 
     /// <summary>
-    /// Template of both logging type.
+    /// Gets or sets the template of both logging type.
     /// </summary>
     public static string OutputTemplate { get; set; } = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
 
     /// <summary>
-    /// Switch for all logging level.
+    /// Gets the switch for all logging level.
     /// </summary>
     public static LoggingLevelSwitch LevelSwitch { get; } = new(LogEventLevel.Information);
 
     /// <summary>
-    /// Switch only for Console logging level.
+    /// Gets the switch only for Console logging level.
     /// </summary>
     public static LoggingLevelSwitch ConsoleLevelSwitch { get; } = new(LogEventLevel.Information);
 
     /// <summary>
-    /// Switch only for File logging level.
+    /// Gets the switch only for File logging level.
     /// </summary>
     public static LoggingLevelSwitch FileLevelSwitch { get; } = new(LogEventLevel.Information);
 
@@ -39,12 +40,12 @@ public static class MainLogger
     /// </summary>
     public static void CreateNew()
     {
-        var Ilogger = new LoggerConfiguration()
+        var ilogger = new LoggerConfiguration()
             .MinimumLevel.ControlledBy(LevelSwitch)
-            .WriteTo.File(FileName, outputTemplate: OutputTemplate, levelSwitch: FileLevelSwitch)
-            .WriteTo.Console(outputTemplate: OutputTemplate, levelSwitch: ConsoleLevelSwitch)
+            .WriteTo.File(FileName, outputTemplate: OutputTemplate, levelSwitch: FileLevelSwitch, formatProvider: CultureInfo.InvariantCulture)
+            .WriteTo.Console(outputTemplate: OutputTemplate, levelSwitch: ConsoleLevelSwitch, formatProvider: CultureInfo.InvariantCulture)
             .CreateLogger();
-        Log.Logger = Ilogger;
+        Log.Logger = ilogger;
     }
 
     /// <summary>

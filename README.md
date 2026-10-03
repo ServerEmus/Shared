@@ -1,5 +1,5 @@
 # Shared
-Main package accross ServerEmus.\
+Main package across ServerEmus.\
 This currently contains:
 - Log handle
 - INI File work

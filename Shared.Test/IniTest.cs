@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-namespace Shared.Test;
+namespace ServerEmus.Shared.Test;
 
 public class IniTest
 {
